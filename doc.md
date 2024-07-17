@@ -25,20 +25,20 @@ About XPath in oXygen:
 #### Examples of XPATH queries
 
 Mss copied before 1458
-- `//origDate[@from < 1458]//ancestor::msDesc`
+- `//origDate[@from < 1458]//ancestor::msDesc/@xml-id`
 
 Mss copied after 1458
-- `//origDate[@to > 1458]//ancestor::msDesc`
+- `//origDate[@to > 1458]//ancestor::msDesc/@xml-id`
 
 Mss copied by Iohannes Scolaris
-- `//handNote[@scribeRef="#IohannesScolaris"]//ancestor::msDesc`
+- `//handNote[@scribeRef="#IohannesScolaris"]//ancestor::msDesc/@xml-id`
 
 Mss belonging to a person or organisation
-- `//provenance//*[@ref="#BaselDominicanConvent"]//ancestor::msDesc`
+- `//provenance//*[@ref="#BaselDominicanConvent"]//ancestor::msDesc/@xml-id`
 
 Mss containing questions on a specific work
-- `//msItem/title[@ref="#work_DC"]/../msItem[@class="question"]`
+- `//msItem/title[@ref="#work_DC"]/../msItem[@class="question"]//ancestor::msDesc/@xml-id`
 
 Mss copied in Leipzig or Paris
-- `//origPlace[@ref='#place_cologne']//ancestor::msDesc`
+- `//origPlace[@ref='#place_cologne']//ancestor::msDesc/@xml-id`
 
