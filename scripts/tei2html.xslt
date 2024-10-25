@@ -15,12 +15,16 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <title>Versoris Mss</title>
                 <style>
+                    body {max-width:1200px; margin: 0 auto; font-family:Helvetica; font-size:large; line-height:1.2}
+                    hr {margin: 100px 0px}
+                    ul {margin: 0px}
+                    li {margin-top: 10px}
                    .msDesc {margin:20px 0px} 
                    .msDescID {margin-bottom:5px}
-                   .fieldname {text-decoration:underline}
-                   .summary {margin-bottom:1em}
+                   .fieldname {font-weight:bold; display: inline-block; padding-top:20px}
                    .ref-work {font-style:italic}
                 </style>
+                
             </head>
             <body>
                 <h1>Bibliotheca Manuscripta Versoriana</h1>
@@ -41,6 +45,31 @@
                         </xsl:for-each>
                     </ul>
                 </div>
+                
+                
+                <!-- 
+                <div class="timeline">
+                    <ul>
+                        <xsl:for-each select="//msDesc">
+                            <li>
+                                <a>
+                                <xsl:attribute name="href">
+                                    <xsl:text>#</xsl:text>
+                                    <xsl:value-of select="@xml:id"/>
+                                </xsl:attribute>
+                                <span>
+                                    <xsl:attribute name="data-date">
+                                        <xsl:value-of select=".//origDate/@from"/>
+                                    </xsl:attribute>
+                                    <xsl:value-of select="@xml:id"/>
+                                </span>
+                                </a>
+                            </li>
+                        </xsl:for-each>
+                    </ul>
+                </div>
+                 -->
+                
                 
                 <hr/>
                 
@@ -64,6 +93,7 @@
             </h2>
             <xsl:apply-templates/>
         </div>
+        <hr/>
     </xsl:template>
     
     <xsl:template match="msIdentifier">
@@ -135,14 +165,23 @@
                 <xsl:apply-templates select="note"/>
             </xsl:if>
             
+            <!-- quote -->
+            <xsl:if test="quote">
+                <xsl:apply-templates select="quote"/>
+            </xsl:if>
+            
+            <!-- colophon -->
+            <xsl:if test="colophon">
+                <xsl:apply-templates select="colophon"/>
+            </xsl:if>
+            
             <!-- questions -->
             <xsl:if test="msItem[@class='question']">
                 <ul>
                     <xsl:apply-templates select="msItem[@class='question']"/>
                 </ul>
             </xsl:if>
-        </li>   
-        <br/>
+        </li>
     </xsl:template>
     
     <xsl:template match="note">
@@ -243,7 +282,7 @@
             </xsl:if>
             <xsl:if test="origin/p">
                 <div>
-                    <xsl:apply-templates select="./origin/p"/>
+                    <xsl:apply-templates select="origin/p"/>
                 </div>    
             </xsl:if>
         </div>
@@ -260,11 +299,45 @@
         </xsl:if>
     </xsl:template>
     
+    <xsl:template match="bibl[@corresp]">
+        <a>
+            <xsl:attribute name="href">
+                <xsl:value-of select="@corresp"/>
+            </xsl:attribute>
+            <xsl:apply-templates/>
+        </a>
+    </xsl:template>
+    
     <xsl:template match="listBibl/bibl">
         <li>
             <xsl:value-of select="."/>
         </li>
     </xsl:template>
+    
+    
+    <xsl:template match="colophon">
+        <div>
+            <xsl:text>Colophon </xsl:text>
+            <xsl:if test="@source != ''">
+                <xsl:text>[</xsl:text>
+                <xsl:value-of select="@source"/>
+                <xsl:text>]: </xsl:text>
+            </xsl:if>
+            <xsl:text>"</xsl:text>
+            <xsl:apply-templates/>
+            <xsl:text>"</xsl:text>
+        </div>
+    </xsl:template>
+    
+    <xsl:template match="persName">
+        <a>
+            <xsl:attribute name="href">
+                <!--<xsl:value-of select="@target"/>-->
+            </xsl:attribute>
+            <xsl:apply-templates></xsl:apply-templates>
+        </a>
+    </xsl:template>
+    
     
     
     
@@ -277,7 +350,22 @@
         <xsl:text>"</xsl:text>
     </xsl:template>
     
-    <!-- references -->
+    
+    <xsl:template match="quote">
+        <div>
+            <xsl:if test="@source != ''">
+                <xsl:text>[</xsl:text>
+                <xsl:value-of select="@source"/>
+                <xsl:text>] </xsl:text>
+            </xsl:if>
+            <xsl:text>"</xsl:text>
+            <xsl:apply-templates/>
+            <xsl:text>"</xsl:text>
+        </div>
+    </xsl:template>
+    
+    
+    
     <xsl:template match="ref">
         <a>
             <xsl:attribute name="href">

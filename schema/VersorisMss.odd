@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TEI xml:lang="en" n="testms" xmlns="http://www.tei-c.org/ns/1.0">
+<TEI xml:lang="en" n="testms" xmlns="http://www.tei-c.org/ns/1.0"
+  xmlns:sch="http://purl.oclc.org/dsdl/schematron">
   <teiHeader>
     <fileDesc>
       <titleStmt>
@@ -58,6 +59,16 @@
     </revisionDesc>
   </teiHeader>
   <text>
+    <front>
+      <div>
+        <p>For each manuscript: identifier, contents, history. Information regarding, for example,
+          watermarks and hands are only registered in the history. </p>
+        <p>For each item: locus, title. Optional: author, note, quote, incipit, explicit.</p>
+        <p>Notes can be of type: attribution, content, desc, gap, msRelationship, paleo, toc.</p>
+      </div>
+
+
+    </front>
     <body>
       <p>TEI for manuscript description</p>
       <schemaSpec ident="VersorisMss" start="TEI teiCorpus" prefix="tei_" targetLang="en"
@@ -71,21 +82,123 @@
         <moduleRef key="transcr"/>
         <moduleRef key="figures"/>
         <moduleRef key="msdescription"/>
-
-        <elementSpec ident="ab" mode="change">
+        
+        
+        <elementSpec ident="colophon" mode="change">
+          <classes>
+            <memberOf key="model.msQuoteLike"/>
+            <memberOf key="att.global" mode="delete"/>
+          </classes>
           <attList>
-            <attDef ident="ana" mode="change">
-              <valList type="closed" mode="change">
-                <valItem mode="add" ident="ana1"/>
-                <valItem mode="add" ident="ana2"/>
-                <valItem mode="add" ident="ana3"/>
-                <valItem mode="add" ident="ana4"/>
-              </valList>
+            <attDef ident="source" mode="add" usage="req">
+              <desc>Indicate the folio r/v or the column. The value of the attribute should not contain "f. "</desc>
             </attDef>
           </attList>
         </elementSpec>
         
+        <elementSpec ident="locus" mode="change">
+          <desc>defines a location within a manuscript or other object, usually as a sequence of folio numbers (using the attributes @from and @to) or other values (in the content of the element).</desc>
+          <classes>
+            <memberOf key="model.pPart.msdesc"/>
+            <memberOf key="att.global" mode="delete"/>
+          </classes>
+          <content>
+            <macroRef key="macro.xtext"/>
+          </content>
+          <attList>
+            <attDef ident="scheme" mode="delete"/>
+          </attList>
+        </elementSpec>
         
+        <elementSpec ident="msItem" mode="change">
+          <desc>Questions are encoded with <gi>msItem</gi>, with <att>class</att> value
+            <val>question</val>, inside the msItem they belong to. They should be transcribed for
+            each ms, so as to preserve the spelling, while also referring to an authority list of
+            questions. The value of the <att>xml:id</att> should be self-explanatory with regard to
+            the commented work.</desc>
+          <classes mode="change">
+            <memberOf key="att.global" mode="delete"/>
+            <memberOf key="att.msExcerpt" mode="delete"/>
+          </classes>
+          <content>
+            <sequence>
+              <elementRef key="locus" minOccurs="1" maxOccurs="1"/>
+              <alternate minOccurs="0" maxOccurs="unbounded">
+                <classRef key="model.msItemPart"/>
+                <elementRef key="msItem"/>
+                <elementRef key="note"/>
+              </alternate>
+            </sequence>
+          </content>
+          <constraintSpec ident="class-n-constraint" scheme="schematron">
+            <constraint>
+              <sch:rule context="tei:msItem">
+                <sch:assert test="@n or not(@class)"> When the msItem element has a 'class'
+                  attribute, it must also have an 'n' attribute. </sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          <constraintSpec ident="msItemIdRule" scheme="schematron">
+            <constraint>
+              <sch:rule context="tei:msItem">
+                <sch:assert test="@xml:id">
+                  Each msItem must have an xml:id attribute.
+                </sch:assert>
+                <sch:let name="parentId" value="ancestor::tei:msDesc/@xml:id"/>
+                <sch:assert test="starts-with(@xml:id, $parentId)">
+                  The xml:id of msItem must start with the xml:id of its parent msDesc. 
+                  Current msItem xml:id: "<sch:value-of select="@xml:id"/>". 
+                  Parent msDesc xml:id: "<sch:value-of select="$parentId"/>".
+                </sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          <attList>
+            <attDef ident="xml:id" usage="req" mode="add">
+              <desc>Provides a unique identifier for the element.</desc>
+              <datatype>
+                <dataRef key="teidata.ID"/>
+              </datatype>
+            </attDef>
+            <attDef ident="class" usage="opt" mode="change">
+              <desc>Only use this attribute to say that this is a question, to differentiate from
+                the generic <gi>msItem</gi>.</desc>
+              <defaultVal>question</defaultVal>
+            </attDef>
+            <attDef ident="n" usage="opt" mode="add">
+              <desc>Defines the order of the questions in the manuscript.</desc>
+              <datatype>
+                <dataRef key="teidata.numeric"/>
+              </datatype>
+            </attDef>
+          </attList>
+          <exemplum>
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <msItem xml:id="Aarau_AKB_MsWettF42_DC_q1" class="question" n="1">
+                <locus from="100ra"/>
+                <title ref="questionID">Utrum corpus mobile ad locum sit subiectum scientie libri De
+                  celo et mundo</title>
+              </msItem>
+            </egXML>
+          </exemplum>
+          <exemplum>
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <msItem xml:id="Aarau_AKB_MsWettF42_QdA">
+                <locus from="107" to="134vb"/>
+                <title ref="workID">QdA</title>
+                <explicit>circa colores, et hoc est percipere plures <gap/><note type="gap">The
+                  other leaves have been ripped off.</note></explicit>
+                <note type="paleo">Copied by a different hand than <ref type="msItem"
+                  target="#Aarau_AKB_MsWettF42_AnonExpositio">previous text</ref>.</note>
+                <note type="content">Unfinished, up to q. II <q>Utrum sensus tactus sit unus vel
+                  plures</q></note>
+              </msItem>
+            </egXML>
+          </exemplum>
+        </elementSpec>
+
+
+         <!--  does not work -->
         <elementSpec ident="note" mode="change">
           <attList>
             <attDef ident="type" mode="change">
@@ -97,7 +210,6 @@
                 <valItem mode="add" ident="gap"/>
                 <valItem mode="add" ident="msRelationship"/>
                 <valItem mode="add" ident="paleo"/>
-                <valItem mode="add" ident="toc"/>
               </valList>
             </attDef>
           </attList>
@@ -119,6 +231,45 @@
             </attDef>
           </attList>
         </elementSpec>
+        
+        <elementSpec ident="persName" module="namesdates" mode="change">
+          <classes>
+            <memberOf key="model.nameLike.agent"/>
+            <memberOf key="att.global" mode="delete"/>
+            <memberOf key="att.datable" mode="delete"/>
+            <memberOf key="att.typed" mode="delete"/>
+          </classes>
+          <content>
+            <macroRef key="macro.phraseSeq"/>
+          </content>
+          <constraintSpec ident="refAndRoleAttributes" scheme="schematron">
+            <constraint>
+              <sch:rule context="tei:persName">
+                <sch:assert test="@ref">
+                  The persName element must have the @ref attribute.
+                </sch:assert>
+                <sch:assert test="count(@*) = 1 or (count(@*) = 2 and @ref and @role)">
+                  The persName element must have the @ref attribute and may optionally have the @role attribute. No other attributes are allowed.
+                </sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          <attList>
+            <attDef ident="ref" usage="req">
+              <desc>provides a means of pointing to a standardized reference for the name.</desc>
+              <datatype>
+                <dataRef key="teidata.pointer"/>
+              </datatype>
+            </attDef>
+            <attDef ident="role" usage="opt">
+              <desc>specifies a primary role or classification for the person.</desc>
+              <datatype>
+                <dataRef key="teidata.enumerated"/>
+              </datatype>
+            </attDef>
+            <attDef ident="calendar" mode="delete"/>
+          </attList>
+        </elementSpec>
 
         <elementSpec ident="q" mode="change">
           <desc>contains a quotation from a source, generally from a manuscript.</desc>
@@ -127,6 +278,45 @@
             <outputRendition scope="after">content: '"'</outputRendition>
           </model>
         </elementSpec>
+        
+        
+        <elementSpec ident="quote" mode="change">
+          <classes>
+            <memberOf key="model.quoteLike"/>
+            <memberOf key="model.biblPart"/>
+            <memberOf key="att.global" mode="delete"/>
+          </classes>
+          <attList>
+            <attDef ident="source" mode="add" usage="req">
+              <desc>Indicate the folio r/v or the column. The value of the attribute should not contain "f. ". It can remain empty if the location in the manuscript is clear in the context.</desc>
+            </attDef>
+          </attList>
+        </elementSpec>
+        
+        
+        
+        
+
+        <elementSpec ident="title" mode="change">
+          <constraintSpec ident="titleInMsDesc" scheme="schematron">
+            <constraint>
+              <sch:rule context="tei:title[ancestor::tei:msDesc]">
+                <sch:assert test="@ref"> When title appears within msDesc, it must carry a @ref
+                  attribute. </sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          <attList>
+            <attDef ident="ref" mode="change" usage="req"/>
+            <!-- una volta finito di codificare, questo andrà tolto perché altrimenti vuole ref anche nel titleStmt -->
+          </attList>
+        </elementSpec>
+        
+        
+        
+       
+
+
       </schemaSpec>
     </body>
   </text>
