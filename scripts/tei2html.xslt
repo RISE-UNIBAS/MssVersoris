@@ -16,6 +16,7 @@
                 <title>Versoris Mss</title>
                 <style>
                     body {max-width:1200px; margin: 0 auto; font-family:Helvetica; font-size:large; line-height:1.2}
+                    div {margin-bottom:0.3em}
                     hr {margin: 100px 0px}
                     ul {margin: 0px}
                     li {margin-top: 10px}
@@ -23,6 +24,7 @@
                    .msDescID {margin-bottom:5px}
                    .fieldname {font-weight:bold; display: inline-block; padding-top:20px}
                    .ref-work {font-style:italic}
+                   .persName {text-decoration: underline; text-decoration-color: orange}
                 </style>
                 
             </head>
@@ -128,10 +130,14 @@
     
     <xsl:template match="msItem[not(@class)]">
         <li class="msPart">
+            <xsl:attribute name="id">
+                <xsl:value-of select="@xml:id"/>
+            </xsl:attribute>
             <!-- locus -->
             <xsl:choose>                
                 <xsl:when test="locus/@from and locus/@to">
                     <div class="locus">
+                        <xsl:text>Locus: </xsl:text>
                         <xsl:value-of select="locus/@from"/>
                         <xsl:text>–</xsl:text>
                         <xsl:value-of select="locus/@to"/>
@@ -139,11 +145,13 @@
                 </xsl:when>
                 <xsl:when test="locus/@from">
                     <div class="locus">
+                        <xsl:text>Locus: </xsl:text>
                         <xsl:value-of select="locus/@from"/>
                     </div>
                 </xsl:when>
                 <xsl:when test="locus">
                     <div class="locus">
+                        <xsl:text>Locus: </xsl:text>
                         <xsl:value-of select="locus"/>
                     </div>
                 </xsl:when>
@@ -152,12 +160,13 @@
             
             <!-- title -->
             <xsl:if test="title">
+                <div>
+                <xsl:text>Title: </xsl:text>
                 <span class="title">
                     <i>
                         <xsl:value-of select="title"/>
                     </i>
-                </span>
-                <br/>
+                </span></div>
             </xsl:if>
             
             <!-- note -->
@@ -217,6 +226,13 @@
                 </div>
             </xsl:when>
         </xsl:choose>
+    </xsl:template>
+    
+    
+    <xsl:template match="p">
+        <div>
+            <xsl:apply-templates/>
+        </div>
     </xsl:template>
     
     
@@ -289,6 +305,18 @@
     </xsl:template>
     
     <xsl:template match="additional">
+        <xsl:if test="./surrogates">
+            <div class="fieldname">Digital facsimile:</div>
+            <xsl:if test="./surrogates/ptr">
+                <xsl:text> </xsl:text>
+                <a>
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="./surrogates/ptr/@target"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="./surrogates/ptr/@target"/>
+                </a>
+            </xsl:if>
+        </xsl:if>
         <xsl:if test="./listBibl">
             <div class="bibl">
                 <div class="fieldname">Bibliography</div>
@@ -330,9 +358,9 @@
     </xsl:template>
     
     <xsl:template match="persName">
-        <a>
+        <a class="persName">
             <xsl:attribute name="href">
-                <!--<xsl:value-of select="@target"/>-->
+                <xsl:value-of select="@ref"/>
             </xsl:attribute>
             <xsl:apply-templates></xsl:apply-templates>
         </a>
@@ -369,7 +397,7 @@
     <xsl:template match="ref">
         <a>
             <xsl:attribute name="href">
-                <!--<xsl:value-of select="@target"/>-->
+                <xsl:value-of select="@target"/>
             </xsl:attribute>
             <xsl:choose>
                 <xsl:when test=".[@type='work']">
@@ -382,6 +410,16 @@
                 </xsl:otherwise>
             </xsl:choose>
         </a>
+    </xsl:template>
+    
+    <xsl:template match="supplied">
+        <xsl:text>&#60;</xsl:text>
+        <xsl:value-of select="."/>
+        <xsl:text>&#62;</xsl:text>
+    </xsl:template>
+    
+    <xsl:template match="unclear">
+        <xsl:text>(?)</xsl:text>
     </xsl:template>
     
     

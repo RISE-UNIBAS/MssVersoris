@@ -92,6 +92,9 @@
           <attList>
             <attDef ident="source" mode="add" usage="req">
               <desc>Indicate the folio r/v or the column. The value of the attribute should not contain "f. "</desc>
+              <datatype>
+                <dataRef key="teidata.text"></dataRef>
+              </datatype>
             </attDef>
           </attList>
         </elementSpec>
@@ -108,6 +111,28 @@
           <attList>
             <attDef ident="scheme" mode="delete"/>
           </attList>
+        </elementSpec>
+
+
+        <elementSpec ident="msIdentifier" mode="change">
+          <desc>Contains the identifier for a manuscript, including settlement, collection, and idno.</desc>
+          <content>
+            <sequence>
+              <elementRef key="settlement" minOccurs="1" maxOccurs="1"/>
+              <elementRef key="repository" minOccurs="1" maxOccurs="1"/>
+              <elementRef key="idno" minOccurs="1" maxOccurs="1"/>
+              <elementRef key="altIdentifier" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+          </content>
+          <exemplum xml:lang="en">
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <msIdentifier>
+                <settlement>Oxford</settlement>
+                <repository>Bodleian Library</repository>
+                <idno>MS. Bodl. 406</idno>
+              </msIdentifier>
+            </egXML>
+          </exemplum>
         </elementSpec>
         
         <elementSpec ident="msItem" mode="change">
@@ -288,7 +313,12 @@
           </classes>
           <attList>
             <attDef ident="source" mode="add" usage="req">
-              <desc>Indicate the folio r/v or the column. The value of the attribute should not contain "f. ". It can remain empty if the location in the manuscript is clear in the context.</desc>
+              <desc>Indicate the folio r/v or the column.
+                The value of the attribute should not contain "f. ".
+                It can remain empty if the location in the manuscript is clear in the context.</desc>
+              <datatype>
+                <dataRef key="teidata.text"></dataRef>
+              </datatype>
             </attDef>
           </attList>
         </elementSpec>
