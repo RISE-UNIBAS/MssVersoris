@@ -188,7 +188,7 @@
 
 
             <!-- Basel UB F II 14 - Ba3 -->
-            <!-- BASATO SU? NOTA NON VA IN MSCONTENTS NÉ IN HISTORY. DOVE?
+            <!-- BASATO SU? ORA NON C'È, MA CI SARÀ DICE AURORA, TUTTO OK
             <note type="msRelationship">Relations to other manuscripts: <ref target="#Basel_UB_F-III-10">Basel UB, F III 10</ref>, <ref target="#Basel_UB_F-III-11">F III 11</ref>.</note> -->
             <msDesc xml:id="Basel_UB_F-II-14">
                <msIdentifier>
@@ -582,7 +582,8 @@
                   <msItem xml:id="Colmar_BM_223_QdA">
                      <locus from="222r" to="273r"/>
                      <title ref="ID">QdA</title>
-                     <note type="desc">Anonymous QdA. The first folio, probably containing an eluminure, has been ripped out. The collation of the QdA and the QPN with Johannes de Magistris’s commentaries enabled to identify the anonymous texts in the Colmar manuscript with them. [ELE: IS THIS THE RIGHT PLACE FOR THE LAST SENTENCE?]</note>
+                     <note type="desc">Anonymous QdA. The first folio, probably containing an eluminure, has been ripped out. The collation of the QdA and the QPN with Johannes de Magistris’s commentaries enabled to identify the anonymous texts in the Colmar manuscript with them. [ELE: IS THIS THE RIGHT PLACE FOR THE LAST SENTENCE?
+                        Si, ma va separata dalla frase prima  </note>
                      <incipit>animam esse nobiliorem aut honorabiliorem. Altera autem, quia est certior …</incipit>
                   </msItem>
                   <msItem xml:id="Colmar_BM_223_QsSens">
@@ -929,7 +930,7 @@
                   <msItem xml:id="Wien_DK_149-119_Posteriora">
                      <locus from="130ra" to="165rb"/>
                      <title ref="ID">Posteriora</title>
-                     <colophon source="164rb">Et sic est finis glose Parisiensis [ELENA: WHY BOLD?] super utroque libro Posteriorum feria quinta ante Purificationem anno Domini 1454.</colophon>
+                     <colophon source="164rb">Et sic est finis glose Parisiensis super utroque libro Posteriorum feria quinta ante Purificationem anno Domini 1454.</colophon>
                   </msItem>
                   <msItem xml:id="Wien_DK_149-119_Topica">
                      <locus from="166ra" to="182vb"/>
